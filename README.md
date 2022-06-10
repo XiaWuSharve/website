@@ -1,2 +1,2 @@
 # website
-website: Nest.js+Vue.js
+website: Nest.js+Vue.j
