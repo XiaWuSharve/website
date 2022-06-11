@@ -1,4 +1,3 @@
-import { AuthGuard } from './cats/auth.guard';
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 

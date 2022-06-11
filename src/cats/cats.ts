@@ -1,21 +1,24 @@
+import { CreateCatDto } from './dto/create.dto';
 import { FindAllDto } from './dto/find-all.dto';
 import { Injectable } from '@nestjs/common';
-import { Cat } from './interfaces/cat.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Cat, CatDocument } from './schemas/cat.schema';
 
 @Injectable()
 export class Cats {
-    private readonly cats: Cat[] = [];
+  constructor(@InjectModel(Cat.name) private catModel: Model<CatDocument>) {}
 
-    create(cat: Cat) {
-        this.cats.push(cat);
-    }
-    
-    findAll({activeOnly}: FindAllDto): Cat[] {
-        if(activeOnly) return null;
-        return this.cats;
-    }
+  async create(createCatDto: CreateCatDto): Promise<Cat> {
+    const createdCat = new this.catModel(createCatDto);
+    return createdCat.save();
+  }
 
-    findOne(id: number): Cat {
-        return this.cats[id];
-    }
+  async findAll(): Promise<Cat[]> {
+    return this.catModel.find().exec();
+  }
+
+  //   async findOne(): Promise<Cat> {
+  //     return this.catModel.find()
+  //   }
 }
