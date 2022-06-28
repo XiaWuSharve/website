@@ -1,6 +1,7 @@
 import { CreateCatDto } from './dto/create.dto';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Cats } from './cats';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('cats')
 export class CatsController {
@@ -10,13 +11,16 @@ export class CatsController {
   findAllUsers() {
     return true;
   }
-
+  @ApiTags('Hello?')
   @Get()
   async findAll() {
     return this.cats.findAll();
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'this is an operation',
+  })
   async create(@Body() createCatDto: CreateCatDto) {
     this.cats.create(createCatDto);
     return `created a new cat named ${createCatDto.name}`;
