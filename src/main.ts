@@ -2,7 +2,7 @@
  * @Author: XiaWuSharve sharve@foxmail.com
  * @Date: 2022-06-10 21:30:56
  * @LastEditors: XiaWuSharve sharve@foxmail.com
- * @LastEditTime: 2022-06-27 14:32:13
+ * @LastEditTime: 2022-07-07 17:05:59
  * @FilePath: \website\src\main.ts
  * @Description: 主方法
  */
@@ -17,15 +17,12 @@ const logger = new Logger('main.ts');
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  /**
-   * @description: 配置swagger
-   * @return {*}
-   */
   const config = new DocumentBuilder()
     .setTitle('Cats example')
     .setDescription('The cats API description')
     .setVersion('1.0')
     .addTag('Cats')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
