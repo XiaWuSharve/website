@@ -1,31 +1,29 @@
 /*
  * @Author: XiaWuSharve sharve@foxmail.com
- * @Date: 2022-06-28 19:21:00
+ * @Date: 2022-07-11 14:51:25
  * @LastEditors: XiaWuSharve sharve@foxmail.com
- * @LastEditTime: 2022-07-07 20:29:33
- * @FilePath: \website\src\auth\auth.module.ts
+ * @LastEditTime: 2022-07-11 15:04:33
+ * @FilePath: \website\src\modules\auth\auth.module.ts
  * @Description: 验证模块
  */
-import { UserModule } from './../user/user.module';
+import { JwtConstants } from './jwt.constants';
+import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Passport } from 'passport';
 import { AuthController } from './auth.controller';
-import { JwtModule } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../user/schema/user.schema';
-import { AuthConstants } from './auth.constants';
+import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  providers: [AuthService],
   imports: [
-    UserModule,
-    Passport,
     JwtModule.register({
-      secret: AuthConstants.secret,
+      secret: JwtConstants.secret,
+      signOptions: {
+        expiresIn: '60s',
+      },
     }),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

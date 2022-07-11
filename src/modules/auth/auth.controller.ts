@@ -1,40 +1,29 @@
 /*
  * @Author: XiaWuSharve sharve@foxmail.com
- * @Date: 2022-07-03 14:38:59
+ * @Date: 2022-07-11 14:52:59
  * @LastEditors: XiaWuSharve sharve@foxmail.com
- * @LastEditTime: 2022-07-07 20:29:45
- * @FilePath: \website\src\auth\auth.controller.ts
- * @Description: 验证控制器
+ * @LastEditTime: 2022-07-11 19:47:29
+ * @FilePath: \website\src\modules\auth\auth.controller.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { User } from './../user/schema/user.schema';
+import { AuthGuard } from '@nestjs/passport';
+import { Controller, Post, UseGuards, Request, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { MyResponse } from '../user/interfaces/my-response.interface';
 
 @Controller('auth')
-@ApiTags('验证控制器')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
-  @ApiOperation({
-    summary: '登录验证',
-  })
-  // @UseGuards(LocalAuthGuard)
-  async login(@Body() userDto: User): Promise<MyResponse> {
-    return this.authService.validate(userDto).catch((err) => {
-      return err;
-    });
+  @Post()
+  @UseGuards(AuthGuard('local'))
+  async login(@Request() req) {
+    console.log(req.user);
+    return this.authService.login(req.user);
   }
 
-  @Post('regist')
-  @ApiOperation({
-    summary: '创建用户',
-  })
-  async createUser(@Body() createUserDto: User): Promise<MyResponse> {
-    return this.authService.createUser(createUserDto).catch((err) => {
-      return err;
-    });
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async hello() {
+    return 'hello';
   }
 }
